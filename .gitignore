@@ -1,0 +1,11 @@
+gen
+.settings
+bin
+output
+.idea
+build/
+local.properties
+*.iml
+.gradle
+*.apk
+manifest-merger-release-report.txt
