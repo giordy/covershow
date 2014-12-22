@@ -25,10 +25,17 @@ public class WidgetHighlightCover extends HighlightCover {
         this(widgetId, activity, null);
     }
 
+    public WidgetHighlightCover(View widget, Activity activity) {
+        this(widget, activity, null);
+    }
+
     public WidgetHighlightCover(int widgetId, Activity activity, Integer id) {
+        this(activity.findViewById(widgetId), activity, id);
+    }
+
+    public WidgetHighlightCover(final View widget, Activity activity, Integer id) {
         super(activity, id);
 
-        final View widget = activity.findViewById(widgetId);
         if(widget != null){
             widget.post(new Runnable() {
                 @Override
@@ -42,7 +49,6 @@ public class WidgetHighlightCover extends HighlightCover {
                 }
             });
         }
-
     }
 
 

@@ -19,6 +19,7 @@ package com.novadart.test;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.novadart.android.covershow.container.activity.CovershowActivity;
 import com.novadart.android.covershow.cover.Cover;
@@ -61,16 +62,17 @@ public class MainActivity extends CovershowActivity {
     }
 
     @Override
-    protected boolean shouldDisplayCover() {
+    public boolean shouldDisplayCover() {
         return true;
     }
 
 
     @Override
-    protected List<Cover> buildCovers() {
+    public List<Cover> buildCovers() {
         List<Cover> covers = new ArrayList<>();
 
-        WidgetHighlightCover sc = new WidgetHighlightCover(R.id.aa, this);
+        View aa = findViewById(R.id.aa);
+        WidgetHighlightCover sc = new WidgetHighlightCover(aa, this);
         sc.setText("a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a", "DDADADADA");
 
         covers.add(sc);

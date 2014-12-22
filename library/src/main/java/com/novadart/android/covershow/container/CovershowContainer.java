@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.library'
+package com.novadart.android.covershow.container;
 
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+import com.novadart.android.covershow.cover.Cover;
 
-    defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    lintOptions {
-        abortOnError false
-    }
+import java.util.List;
 
-}
-
-dependencies {
-    compile 'com.android.support:appcompat-v7:21.0.+'
-    compile 'com.android.support:appcompat-v7:21.0.+'
+public interface CovershowContainer extends CovershowDirector.Listener {
+    public boolean isCovershowRunning();
+    public boolean shouldDisplayCover();
+    public List<Cover> buildCovers();
 }

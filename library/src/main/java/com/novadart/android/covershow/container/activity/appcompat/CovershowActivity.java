@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.novadart.android.covershow.container.activity;
+package com.novadart.android.covershow.container.activity.appcompat;
 
 
-import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.novadart.android.covershow.container.CovershowContainer;
-import com.novadart.android.covershow.cover.Cover;
+import com.novadart.android.covershow.container.activity.CovershowActivityCore;
 
-import java.util.List;
-
-public abstract class CovershowActivity extends Activity implements CovershowContainer {
+public abstract class CovershowActivity extends ActionBarActivity implements CovershowContainer {
 
     private CovershowActivityCore covershowActivityCore = new CovershowActivityCore(this);
 

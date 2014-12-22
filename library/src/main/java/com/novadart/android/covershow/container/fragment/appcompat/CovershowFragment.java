@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package com.novadart.android.covershow.container.fragment;
+package com.novadart.android.covershow.container.fragment.appcompat;
 
-import android.annotation.TargetApi;
-import android.app.Fragment;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.novadart.android.covershow.container.CovershowContainer;
+import com.novadart.android.covershow.container.fragment.CovershowFragmentCore;
 import com.novadart.android.covershow.cover.Cover;
 
 import java.util.List;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
 public abstract class CovershowFragment extends Fragment implements CovershowContainer {
 
     private CovershowFragmentCore covershowFragmentCore = new CovershowFragmentCore(this);

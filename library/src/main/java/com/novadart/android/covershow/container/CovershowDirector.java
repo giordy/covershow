@@ -17,6 +17,7 @@
 package com.novadart.android.covershow.container;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.View;
@@ -55,10 +56,6 @@ public class CovershowDirector implements Cover.Handler{
 
     public void addListener(Listener listener){
         listeners.add(listener);
-    }
-
-    public void removeListener(Listener listener){
-        listeners.remove(listener);
     }
 
     public int getFadingTime() {
@@ -141,7 +138,10 @@ public class CovershowDirector implements Cover.Handler{
             animateChangeView(oldView);
 
         } else {
-            cleanup(coverIndex);
+
+            View lastView = container.getChildAt(0);
+            animateLastViewHidingAndCleanup(lastView);
+
         }
     }
 
@@ -176,6 +176,40 @@ public class CovershowDirector implements Cover.Handler{
         }
     }
 
+    private void animateLastViewHidingAndCleanup(View lastView){
+        if(Build.VERSION.SDK_INT < 12){
+            if(lastView != null) {
+                AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0f);
+                alphaAnimation.setDuration(fadingTime);
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        cleanup(coverIndex);
+                    }
+
+                });
+                lastView.startAnimation(alphaAnimation);
+            }
+
+        } else {
+            if(lastView != null) {
+                lastView.animate()
+                        .alpha(0f)
+                        .setDuration(fadingTime)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                cleanup(coverIndex);
+                            }
+                        });
+            }
+        }
+    }
 
     private void animateChangeView(View oldView){
 
@@ -219,6 +253,8 @@ public class CovershowDirector implements Cover.Handler{
         for (Listener listener : listeners) {
             listener.onCovershowTermination();
         }
+
+        listeners.clear();
 
         // free the resources occupied by the previous cover
         if(currentCoverIndex >= 0){
