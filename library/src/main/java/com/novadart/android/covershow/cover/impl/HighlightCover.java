@@ -108,11 +108,6 @@ public class HighlightCover implements Cover {
             paint = new Paint();
         }
 
-        @Override
-        public boolean onKeyDown(int keyCode, KeyEvent event) {
-            return super.onKeyDown(keyCode, event);
-        }
-
         protected void drawBackground(Canvas canvas, TypedArray style){
             // fill the canvas
             paint.setStyle(Paint.Style.FILL);
