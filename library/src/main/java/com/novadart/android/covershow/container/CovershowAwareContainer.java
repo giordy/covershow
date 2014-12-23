@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2015 Giordano Battilana, Novadart
  *
@@ -15,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.novadart.android.covershow.cover;
+package com.novadart.android.covershow.container;
 
-import android.view.View;
+import com.novadart.android.covershow.cover.Cover;
+import com.novadart.android.covershow.director.CovershowDirector;
 
-public interface Cover<Identifier> {
-    public Identifier getIdentifier();
-    public void buildView(Handler<Identifier> handler);
-    public View getView();
-    public void destroy();
+import java.util.List;
 
-    public interface Handler<CoverIdentifier> {
-        public void onCoverExit(CoverIdentifier identifier);
-    }
-
+public interface CovershowAwareContainer<Identifier> extends CovershowDirector.Listener<Identifier> {
+    public boolean isCovershowRunning();
+    public boolean shouldDisplayCover();
+    public List<Cover<Identifier>> buildCovers();
 }

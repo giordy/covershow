@@ -23,34 +23,35 @@ import android.view.View;
 
 import com.novadart.android.covershow.cover.Cover;
 
-public class StaticCover implements Cover {
+public class StaticCover<Identifier> implements Cover<Identifier> {
 
-    private final Integer id;
+    private final Identifier id;
     private final int layoutId;
     private final Context context;
+    private View view;
 
     public StaticCover(Context context, int layoutId) {
         this(context, null, layoutId);
     }
 
-    public StaticCover(Context context, Integer id, int layoutId) {
+    public StaticCover(Context context, Identifier id, int layoutId) {
         this.context = context;
         this.id = id;
         this.layoutId = layoutId;
     }
 
     @Override
-    public Integer getId() {
+    public Identifier getIdentifier() {
         return id;
     }
 
     @Override
-    public View buildView(final Handler handler) {
-        View view = LayoutInflater.from(context).inflate(layoutId, null);
+    public void buildView(final Handler handler) {
+        view = LayoutInflater.from(context).inflate(layoutId, null);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handler.onCoverExit();
+                handler.onCoverExit(id);
             }
         });
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -59,6 +60,10 @@ public class StaticCover implements Cover {
                 return true;
             }
         });
+    }
+
+    @Override
+    public View getView() {
         return view;
     }
 

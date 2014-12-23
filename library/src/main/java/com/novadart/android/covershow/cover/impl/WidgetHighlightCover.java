@@ -19,7 +19,7 @@ package com.novadart.android.covershow.cover.impl;
 import android.app.Activity;
 import android.view.View;
 
-public class WidgetHighlightCover extends HighlightCover {
+public class WidgetHighlightCover<Identifier> extends HighlightCover<Identifier> {
 
     public WidgetHighlightCover(int widgetId, Activity activity) {
         this(widgetId, activity, null);
@@ -29,11 +29,11 @@ public class WidgetHighlightCover extends HighlightCover {
         this(widget, activity, null);
     }
 
-    public WidgetHighlightCover(int widgetId, Activity activity, Integer id) {
+    public WidgetHighlightCover(int widgetId, Activity activity, Identifier id) {
         this(activity.findViewById(widgetId), activity, id);
     }
 
-    public WidgetHighlightCover(final View widget, Activity activity, Integer id) {
+    public WidgetHighlightCover(final View widget, Activity activity, Identifier id) {
         super(activity, id);
 
         if(widget != null){

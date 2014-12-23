@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package com.novadart.android.covershow.container;
+package com.novadart.android.covershow.director;
 
 import com.novadart.android.covershow.cover.Cover;
 
 import java.util.List;
 
-public interface CovershowContainer extends CovershowDirector.Listener {
-    public boolean isCovershowRunning();
-    public boolean shouldDisplayCover();
-    public List<Cover> buildCovers();
+public interface CovershowDirector<Identifier> extends Cover.Handler<Identifier> {
+    void addListener(Listener<Identifier> listener);
+    void setCovers(List<Cover<Identifier>> covers);
+    boolean hasCovers();
+    void start();
+
+    public static interface Listener<Identifier> {
+        void onCovershowPreparation();
+        void onNextCover(Identifier identifier);
+        void onCovershowTermination();
+    }
 }

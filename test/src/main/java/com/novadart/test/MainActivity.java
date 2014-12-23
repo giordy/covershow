@@ -23,14 +23,13 @@ import android.view.View;
 
 import com.novadart.android.covershow.container.activity.CovershowActivity;
 import com.novadart.android.covershow.cover.Cover;
-import com.novadart.android.covershow.cover.impl.HighlightCover;
 import com.novadart.android.covershow.cover.impl.WidgetHighlightCover;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends CovershowActivity {
+public class MainActivity extends CovershowActivity<Integer> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +67,11 @@ public class MainActivity extends CovershowActivity {
 
 
     @Override
-    public List<Cover> buildCovers() {
-        List<Cover> covers = new ArrayList<>();
+    public List<Cover<Integer>> buildCovers() {
+        List<Cover<Integer>> covers = new ArrayList<>();
 
         View aa = findViewById(R.id.aa);
-        WidgetHighlightCover sc = new WidgetHighlightCover(aa, this);
+        WidgetHighlightCover<Integer> sc = new WidgetHighlightCover<>(aa, this);
         sc.setText("a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a", "DDADADADA");
 
         covers.add(sc);
@@ -81,5 +80,10 @@ public class MainActivity extends CovershowActivity {
         covers.add(sc);covers.add(sc);covers.add(sc);covers.add(sc);
 
         return covers;
+    }
+
+    @Override
+    public void onNextCover(Integer o) {
+
     }
 }

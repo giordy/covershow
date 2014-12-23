@@ -29,7 +29,6 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -37,10 +36,10 @@ import com.novadart.android.covershow.R;
 import com.novadart.android.covershow.Utils;
 import com.novadart.android.covershow.cover.Cover;
 
-public class HighlightCover implements Cover {
+public class HighlightCover<Identifier> implements Cover<Identifier> {
     public static final int DEFAULT_STYLE_ID = R.style.DefaultHighlightCoverStyle;
 
-    private final Integer id;
+    private final Identifier id;
     private final Context context;
     private HighlightView view;
 
@@ -55,7 +54,7 @@ public class HighlightCover implements Cover {
         this(context, null);
     }
 
-    public HighlightCover(Context context, Integer id) {
+    public HighlightCover(Context context, Identifier id) {
         this.id = id;
         this.context = context;
     }
@@ -75,20 +74,26 @@ public class HighlightCover implements Cover {
     }
 
     @Override
-    public Integer getId() {
+    public Identifier getIdentifier() {
         return id;
     }
 
     @Override
-    public View buildView(final Handler handler) {
+    public void buildView(final Handler<Identifier> handler) {
         view = new HighlightView(context);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                handler.onCoverExit();
-                return false;
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    handler.onCoverExit(id);
+                }
+                return true; // TODO allow touching the highlighted UI in future
             }
         });
+    }
+
+    @Override
+    public HighlightView getView() {
         return view;
     }
 

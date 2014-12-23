@@ -19,58 +19,52 @@ package com.novadart.android.covershow.container.fragment;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.novadart.android.covershow.container.CovershowContainer;
+import com.novadart.android.covershow.container.CovershowAwareContainer;
 import com.novadart.android.covershow.cover.Cover;
 
 import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-public abstract class CovershowFragment extends Fragment implements CovershowContainer {
+public abstract class CovershowFragment<Identifier> extends Fragment implements CovershowAwareContainer<Identifier> {
 
-    private CovershowFragmentCore covershowFragmentCore = new CovershowFragmentCore(this);
+    private FragmentCovershowManager<Identifier> fragmentCovershowManager;
 
-    @Override
-    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(shouldDisplayCover()){
-            View fragmentView = onDecoratedCreateView(inflater, container, savedInstanceState);
-            return covershowFragmentCore.initContainer(getActivity(), fragmentView);
+    public void setFragmentCovershowManager(FragmentCovershowManager<Identifier> fragmentCovershowManager) {
+        this.fragmentCovershowManager = fragmentCovershowManager;
+        fragmentCovershowManager.registerFragment(getClass(), this);
+    }
 
-        } else {
-            return onDecoratedCreateView(inflater, container, savedInstanceState);
-        }
+    protected FragmentCovershowManager<Identifier> getFragmentCovershowManager() {
+        return fragmentCovershowManager;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        covershowFragmentCore.setFragmentVisibleToUser(isVisibleToUser);
+        fragmentCovershowManager.setFragmentVisibleToUser(getClass(), isVisibleToUser);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        List<Cover> covers = buildCovers();
-        covershowFragmentCore.setCovers(covers);
+        if(shouldDisplayCover()) {
+            List<Cover<Identifier>> covers = buildCovers();
+            fragmentCovershowManager.setCovers(getClass(), covers);
+        }
     }
 
     @Override
     public boolean isCovershowRunning() {
-        return covershowFragmentCore.isCovershowRunning();
+        return fragmentCovershowManager.isCovershowRunning(getClass());
     }
 
-    protected abstract View onDecoratedCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
     @Override
     public void onCovershowPreparation() {}
 
     @Override
-    public void onNextCover(Integer id) {}
+    public void onNextCover(Identifier id) {}
 
     @Override
     public void onCovershowTermination() {}
