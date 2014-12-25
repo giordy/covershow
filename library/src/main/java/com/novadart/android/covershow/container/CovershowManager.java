@@ -27,20 +27,34 @@ import com.novadart.android.covershow.director.impl.CovershowDirectorImpl;
 
 import java.util.List;
 
-public abstract class CovershowManager<Identifier> implements CovershowDirector.Listener<Identifier> {
+public abstract class CovershowManager<Identifier> {
     private static final String COVERSHOW_CONTAINER_TAG = "COVERSHOW_CONTAINER_TAG";
 
     private CovershowDirector<Identifier> covershowDirector;
 
     private final Activity activity;
-    private final CovershowAwareContainer<Identifier> covershowAwareContainer;
+    private final CovershowContainer<Identifier> covershowContainer;
+    private boolean autoStart = true;
+    private boolean covershowCanStart = true;
+    private boolean coversAreSet = false;
 
-
-    public CovershowManager(Activity activity, CovershowAwareContainer<Identifier> covershowAwareContainer) {
+    public CovershowManager(Activity activity, CovershowContainer<Identifier> covershowContainer) {
         this.activity = activity;
-        this.covershowAwareContainer = covershowAwareContainer;
+        this.covershowContainer = covershowContainer;
     }
 
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+        this.covershowCanStart = autoStart;
+    }
+
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public void setCovershowCanStart(boolean covershowCanStart) {
+        this.covershowCanStart = covershowCanStart;
+    }
 
     public ViewGroup getCovershowContainer(Activity activity){
         final ViewGroup rootView = ((ViewGroup) activity.getWindow().getDecorView());
@@ -74,21 +88,26 @@ public abstract class CovershowManager<Identifier> implements CovershowDirector.
     public void init(){
         if(covershowDirector == null) {
             covershowDirector = new CovershowDirectorImpl<>(getCovershowContainer(activity));
-            covershowDirector.addListener(this);
-            covershowDirector.addListener(this.covershowAwareContainer);
+            covershowDirector.addListener(this.covershowContainer);
         }
     }
 
-
     public void setCovers(List<Cover<Identifier>> covers){
         init();
-        covershowDirector.setCovers(covers);
+        if( coversAreSet = (covers != null && !covers.isEmpty()) ){
+            covershowDirector.setCovers(covers);
+        }
     }
 
     public void startCovershow(){
         init();
-        covershowDirector.start();
+        if(covershowPreStartTest()) {
+            covershowDirector.start();
+        }
     }
 
+    protected boolean covershowPreStartTest(){
+        return coversAreSet && ( autoStart || covershowCanStart );
+    }
 
 }

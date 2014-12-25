@@ -18,24 +18,48 @@ package com.novadart.android.covershow.container.activity;
 
 
 import android.app.Activity;
+import android.os.Bundle;
 
-import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowContainer;
 import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.cover.Cover;
 
 import java.util.List;
 
-public abstract class CovershowActivity<Identifier> extends Activity implements CovershowAwareContainer<Identifier> {
+public abstract class CovershowActivity<Identifier> extends Activity implements CovershowContainer<Identifier> {
 
     private CovershowManager<Identifier> covershowManager;
+    private boolean autoStart = true;
+
+    @Override
+    public void setCovershowProgrammaticStart() {
+        this.autoStart = false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARG_AUTOSTART, autoStart);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        autoStart = savedInstanceState==null || savedInstanceState.getBoolean(ARG_AUTOSTART, true);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(shouldDisplayCovershow() && covershowManager == null){
+        if(shouldStartCovershow()){
+
             covershowManager = new ActivityCovershowManager<>(this, this);
-            buildCovers( new AsyncHandler<Identifier>() {
+            covershowManager.setAutoStart(autoStart);
+
+            onPreCovershow();
+
+            buildCoverList(new AsyncHandler<Identifier>() {
                 @Override
                 public void setCovers(List<Cover<Identifier>> covers) {
                     covershowManager.setCovers(covers);
@@ -49,6 +73,14 @@ public abstract class CovershowActivity<Identifier> extends Activity implements 
         super.onPause();
 
         covershowManager = null;
+    }
+
+    @Override
+    public void startCovershow() {
+        if(covershowManager != null && !covershowManager.isAutoStart()){
+            covershowManager.setCovershowCanStart(true);
+            covershowManager.startCovershow();
+        }
     }
 
     @Override

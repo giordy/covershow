@@ -19,17 +19,36 @@ package com.novadart.android.covershow.container.fragment;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;
+import android.os.Bundle;
 
-import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowContainer;
 import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.cover.Cover;
 
 import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-public abstract class CovershowFragment<Identifier> extends Fragment implements CovershowAwareContainer<Identifier> {
+public abstract class CovershowFragment<Identifier> extends Fragment implements CovershowContainer<Identifier> {
 
     private CovershowManager<Identifier> covershowManager;
+    private boolean autoStart = true;
+
+    @Override
+    public void setCovershowProgrammaticStart() {
+        this.autoStart = false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARG_AUTOSTART, autoStart);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        autoStart = savedInstanceState==null || savedInstanceState.getBoolean(ARG_AUTOSTART, true);
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -42,14 +61,19 @@ public abstract class CovershowFragment<Identifier> extends Fragment implements 
     @Override
     public void onResume() {
         super.onResume();
-        if(shouldDisplayCovershow() && covershowManager == null) {
-            buildCovers(new AsyncHandler<Identifier>() {
+        if(shouldStartCovershow() && covershowManager == null) {
+
+            FragmentCovershowManager<Identifier> manager = new FragmentCovershowManager<>(getActivity(), CovershowFragment.this);
+            covershowManager = manager;
+            manager.setAutoStart(autoStart);
+            manager.setUserVisibleHint(getUserVisibleHint());
+
+            onPreCovershow();
+
+            buildCoverList(new AsyncHandler<Identifier>() {
                 @Override
                 public void setCovers(List<Cover<Identifier>> covers) {
-                    FragmentCovershowManager<Identifier> manager = new FragmentCovershowManager<>(getActivity(), CovershowFragment.this);
-                    covershowManager = manager;
-                    manager.setUserVisibleHint( getUserVisibleHint() );
-                    manager.setCovers(covers);
+                    covershowManager.setCovers(covers);
                 }
             });
         }
@@ -60,6 +84,14 @@ public abstract class CovershowFragment<Identifier> extends Fragment implements 
         super.onPause();
 
         covershowManager = null;
+    }
+
+    @Override
+    public void startCovershow() {
+        if(covershowManager != null && !covershowManager.isAutoStart()){
+            covershowManager.setCovershowCanStart(true);
+            covershowManager.startCovershow();
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ package com.novadart.android.covershow.container.activity;
 
 import android.app.Activity;
 
-import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowContainer;
 import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.cover.Cover;
 
@@ -28,8 +28,8 @@ import java.util.List;
 public class ActivityCovershowManager<Identifier> extends CovershowManager<Identifier> {
 
 
-    public ActivityCovershowManager(Activity activity, CovershowAwareContainer<Identifier> covershowAwareContainer) {
-        super(activity, covershowAwareContainer);
+    public ActivityCovershowManager(Activity activity, CovershowContainer<Identifier> covershowContainer) {
+        super(activity, covershowContainer);
     }
 
     @Override
@@ -38,13 +38,4 @@ public class ActivityCovershowManager<Identifier> extends CovershowManager<Ident
         startCovershow();
     }
 
-    @Override
-    public void onPreCovershow() {}
-
-    @Override
-    public void onNextCover(Identifier identifier) {}
-
-
-    @Override
-    public void onPostCovershow() {}
 }

@@ -21,11 +21,14 @@ import com.novadart.android.covershow.director.CovershowDirector;
 
 import java.util.List;
 
-public interface CovershowAwareContainer<Identifier> extends CovershowDirector.Listener<Identifier> {
-    public static final String ARG_COVERSHOW_MANAGER = "ARG_COVERSHOW_MANAGER";
+public interface CovershowContainer<Identifier> extends CovershowDirector.Listener<Identifier> {
+    public static final String ARG_AUTOSTART = "ARG_AUTOSTART";
 
-    public boolean shouldDisplayCovershow();
-    public void buildCovers(AsyncHandler<Identifier> handler);
+    void startCovershow();
+    void setCovershowProgrammaticStart();
+    boolean shouldStartCovershow();
+    void onPreCovershow();
+    void buildCoverList(AsyncHandler<Identifier> handler);
 
 
     public static interface AsyncHandler<Identifier>{

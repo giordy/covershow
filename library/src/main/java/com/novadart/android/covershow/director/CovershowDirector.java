@@ -26,7 +26,6 @@ public interface CovershowDirector<Identifier> extends Cover.Handler<Identifier>
     void start();
 
     public static interface Listener<Identifier> {
-        void onPreCovershow();
         void onNextCover(Identifier identifier);
         void onPostCovershow();
     }

@@ -18,7 +18,7 @@ package com.novadart.android.covershow.container.fragment;
 
 import android.app.Activity;
 
-import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowContainer;
 import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.cover.Cover;
 
@@ -26,42 +26,26 @@ import java.util.List;
 
 public class FragmentCovershowManager<Identifier> extends CovershowManager<Identifier> {
 
-    private boolean hasCovers = false;
     private boolean isVisible = false;
 
-    public FragmentCovershowManager(Activity activity, CovershowAwareContainer<Identifier> covershowAwareContainer) {
-        super(activity, covershowAwareContainer);
+    public FragmentCovershowManager(Activity activity, CovershowContainer<Identifier> covershowContainer) {
+        super(activity, covershowContainer);
     }
 
     public void setUserVisibleHint(boolean value){
         this.isVisible = value;
-
-        tryStart();
+        startCovershow();
     }
 
     @Override
     public void setCovers(List<Cover<Identifier>> covers) {
         super.setCovers(covers);
-
-        this.hasCovers = true;
-        tryStart();
-    }
-
-    private synchronized void tryStart(){
-        if(isVisible && hasCovers){
-            startCovershow();
-        }
+        startCovershow();
     }
 
     @Override
-    public void onPreCovershow() {}
-
-    @Override
-    public void onNextCover(Identifier identifier) {}
-
-
-    @Override
-    public void onPostCovershow() {}
-
+    protected boolean covershowPreStartTest() {
+        return isVisible && super.covershowPreStartTest();
+    }
 
 }

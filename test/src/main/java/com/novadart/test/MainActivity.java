@@ -61,12 +61,12 @@ public class MainActivity extends CovershowActivity<Integer> {
     }
 
     @Override
-    public boolean shouldDisplayCovershow() {
+    public boolean shouldStartCovershow() {
         return true;
     }
 
     @Override
-    public void buildCovers(AsyncHandler<Integer> handler) {
+    public void buildCoverList(AsyncHandler<Integer> handler) {
         List<Cover<Integer>> covers = new ArrayList<>();
 
         View aa = findViewById(R.id.aa);

@@ -55,11 +55,7 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
 
     @Override
     public void start(){
-        for (Listener listener : listeners) {
-            listener.onPreCovershow();
-        }
-
-        getContainer().getRootView().post(new Runnable() {
+        getContainer().post(new Runnable() {
             @Override
             public void run() {
                 displayNextCover();
@@ -88,7 +84,6 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
 
 
     protected void cleanup(Cover lastCover){
-//        getContainer().setVisibility(View.GONE);
         getContainer().removeAllViews();
 
         for (Listener listener : listeners) {
