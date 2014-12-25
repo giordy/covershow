@@ -18,41 +18,45 @@ package com.novadart.android.covershow.container.activity;
 
 
 import android.app.Activity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowManager;
+import com.novadart.android.covershow.cover.Cover;
+
+import java.util.List;
 
 public abstract class CovershowActivity<Identifier> extends Activity implements CovershowAwareContainer<Identifier> {
 
-    private ActivityCovershowManager<Identifier> activityCovershowManager = new ActivityCovershowManager<>(this);
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        activityCovershowManager.wrapActivityView(this);
-    }
+    private CovershowManager<Identifier> covershowManager;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(shouldDisplayCover() && !activityCovershowManager.isCoversPresent()){
-            activityCovershowManager.setCovers( buildCovers() );
+        if(shouldDisplayCovershow() && covershowManager == null){
+            covershowManager = new ActivityCovershowManager<>(this, this);
+            buildCovers( new AsyncHandler<Identifier>() {
+                @Override
+                public void setCovers(List<Cover<Identifier>> covers) {
+                    covershowManager.setCovers(covers);
+                }
+            });
         }
     }
 
-    public boolean isCovershowRunning(){
-        return activityCovershowManager.isCovershowRunning();
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        covershowManager = null;
     }
 
     @Override
-    public void onCovershowPreparation() {}
+    public void onPreCovershow() {}
 
     @Override
     public void onNextCover(Identifier id) {}
 
     @Override
-    public void onCovershowTermination() {}
+    public void onPostCovershow() {}
 }

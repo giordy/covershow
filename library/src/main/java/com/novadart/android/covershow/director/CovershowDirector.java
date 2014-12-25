@@ -23,12 +23,11 @@ import java.util.List;
 public interface CovershowDirector<Identifier> extends Cover.Handler<Identifier> {
     void addListener(Listener<Identifier> listener);
     void setCovers(List<Cover<Identifier>> covers);
-    boolean hasCovers();
     void start();
 
     public static interface Listener<Identifier> {
-        void onCovershowPreparation();
+        void onPreCovershow();
         void onNextCover(Identifier identifier);
-        void onCovershowTermination();
+        void onPostCovershow();
     }
 }

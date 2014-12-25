@@ -41,10 +41,10 @@ public class WidgetHighlightCover<Identifier> extends HighlightCover<Identifier>
                 @Override
                 public void run() {
                     int[] winCoordinates = new int[2];
-                    widget.getLocationOnScreen(winCoordinates);
+                    widget.getLocationInWindow(winCoordinates);
                     setCoordinates(
                             winCoordinates[0] + (widget.getWidth() / 2),
-                            winCoordinates[1]/2 + (widget.getHeight() / 2)
+                            winCoordinates[1] + (widget.getHeight() / 2)
                     );
                 }
             });

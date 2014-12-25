@@ -18,6 +18,11 @@
 <resources>
 
     <declare-styleable name="HighlightCoverStyle">
+        <attr name="csTopPadding" format="dimension"/>
+        <attr name="csBottomPadding" format="dimension"/>
+        <attr name="csLeftPadding" format="dimension"/>
+        <attr name="csRightPadding" format="dimension"/>
+
         <attr name="csTitleColor" format="color" />
         <attr name="csTitleSize" format="dimension" />
         <attr name="csTitleBold" format="boolean" />

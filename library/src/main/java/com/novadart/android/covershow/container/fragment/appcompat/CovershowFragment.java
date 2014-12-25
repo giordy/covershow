@@ -19,6 +19,7 @@ package com.novadart.android.covershow.container.fragment.appcompat;
 import android.support.v4.app.Fragment;
 
 import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.container.fragment.FragmentCovershowManager;
 import com.novadart.android.covershow.cover.Cover;
 
@@ -26,44 +27,45 @@ import java.util.List;
 
 public abstract class CovershowFragment<Identifier> extends Fragment implements CovershowAwareContainer<Identifier> {
 
-    private FragmentCovershowManager<Identifier> fragmentCovershowManager;
-
-    public void setFragmentCovershowManager(FragmentCovershowManager<Identifier> fragmentCovershowManager) {
-        this.fragmentCovershowManager = fragmentCovershowManager;
-        fragmentCovershowManager.registerFragment(getClass(), this);
-    }
-
-    protected FragmentCovershowManager<Identifier> getFragmentCovershowManager() {
-        return fragmentCovershowManager;
-    }
+    private CovershowManager<Identifier> covershowManager;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        fragmentCovershowManager.setFragmentVisibleToUser(getClass(), isVisibleToUser);
+        if(covershowManager != null){
+            ((FragmentCovershowManager) covershowManager).setUserVisibleHint(isVisibleToUser);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(shouldDisplayCover()) {
-            List<Cover<Identifier>> covers = buildCovers();
-            fragmentCovershowManager.setCovers(getClass(), covers);
+        if(shouldDisplayCovershow() && covershowManager == null) {
+            buildCovers(new AsyncHandler<Identifier>() {
+                @Override
+                public void setCovers(List<Cover<Identifier>> covers) {
+                    FragmentCovershowManager<Identifier> manager = new FragmentCovershowManager<>(getActivity(), CovershowFragment.this);
+                    covershowManager = manager;
+                    manager.setUserVisibleHint( getUserVisibleHint() );
+                    manager.setCovers(covers);
+                }
+            });
         }
     }
 
     @Override
-    public boolean isCovershowRunning() {
-        return fragmentCovershowManager.isCovershowRunning(getClass());
+    public void onPause() {
+        super.onPause();
+
+        covershowManager = null;
     }
 
-
     @Override
-    public void onCovershowPreparation() {}
+    public void onPreCovershow() {}
 
     @Override
     public void onNextCover(Identifier id) {}
 
     @Override
-    public void onCovershowTermination() {}
+    public void onPostCovershow() {}
 }

@@ -18,71 +18,33 @@ package com.novadart.android.covershow.container.activity;
 
 
 import android.app.Activity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.cover.Cover;
-import com.novadart.android.covershow.director.CovershowDirector;
-import com.novadart.android.covershow.director.impl.CovershowDirectorImpl;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class ActivityCovershowManager<Identifier> implements CovershowDirector.Listener<Identifier> {
+public class ActivityCovershowManager<Identifier> extends CovershowManager<Identifier> {
 
-    private CovershowDirector<Identifier> covershowDirector;
-    private boolean covershowRunning = false;
-    private boolean coversPresent = false;
-    private final CovershowAwareContainer<Identifier> covershowAwareContainer;
 
-    public ActivityCovershowManager(CovershowAwareContainer<Identifier> covershowAwareContainer) {
-        this.covershowAwareContainer = covershowAwareContainer;
-    }
-
-    public void wrapActivityView(Activity activity){
-        ViewGroup.LayoutParams fullscreenParams =
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        final FrameLayout coversContainer = new FrameLayout(activity);
-
-        final ViewGroup rootView = ((ViewGroup) activity.getWindow().getDecorView().getRootView());
-        rootView.post(new Runnable() {
-            @Override
-            public void run() {
-                rootView.addView(coversContainer);
-            }
-        });
-
-        covershowDirector = new CovershowDirectorImpl<>(coversContainer);
-        covershowDirector.addListener(this);
-        covershowDirector.addListener(this.covershowAwareContainer);
-        covershowDirector.start();
-    }
-
-    public boolean isCoversPresent() {
-        return coversPresent;
-    }
-
-    public void setCovers(List<Cover<Identifier>> covers){
-        covershowDirector.setCovers(covers);
-        coversPresent = true;
-        covershowDirector.start();
-    }
-
-    public boolean isCovershowRunning(){
-        return covershowRunning;
+    public ActivityCovershowManager(Activity activity, CovershowAwareContainer<Identifier> covershowAwareContainer) {
+        super(activity, covershowAwareContainer);
     }
 
     @Override
-    public void onCovershowPreparation() {}
+    public void setCovers(List<Cover<Identifier>> covers) {
+        super.setCovers(covers);
+        startCovershow();
+    }
+
+    @Override
+    public void onPreCovershow() {}
 
     @Override
     public void onNextCover(Identifier identifier) {}
 
 
     @Override
-    public void onCovershowTermination() {
-        covershowRunning = false;
-    }
+    public void onPostCovershow() {}
 }

@@ -146,6 +146,13 @@ public class HighlightCover<Identifier> implements Cover<Identifier> {
 
             StaticLayout titleLayout = null;
             StaticLayout descLayout = null;
+
+            float topPadding = style.getDimension(R.styleable.HighlightCoverStyle_csTopPadding, Utils.dipToPixels(context, 20f));
+            float bottomPadding = style.getDimension(R.styleable.HighlightCoverStyle_csBottomPadding, Utils.dipToPixels(context, 20f));
+            float leftPadding = style.getDimension(R.styleable.HighlightCoverStyle_csLeftPadding, Utils.dipToPixels(context, 20f));
+            float rightPadding = style.getDimension(R.styleable.HighlightCoverStyle_csRightPadding, Utils.dipToPixels(context, 20f));
+
+
             float titlePadding = style.getDimension(R.styleable.HighlightCoverStyle_csTitlePadding, Utils.dipToPixels(context, 5f));
             float descPadding = style.getDimension(R.styleable.HighlightCoverStyle_csDescriptionPadding, Utils.dipToPixels(context, 5f));
 
@@ -161,7 +168,7 @@ public class HighlightCover<Identifier> implements Cover<Identifier> {
                 titlePaint.setTextSize(Utils.dipToPixels(context, titleSize));
                 titlePaint.setTypeface(tf);
 
-                titleLayout = new StaticLayout( title, titlePaint, (int) (canvas.getWidth()-(2*titlePadding) ),
+                titleLayout = new StaticLayout( title, titlePaint, (int) (canvas.getWidth()-(2*titlePadding)-(leftPadding+rightPadding) ),
                         Layout.Alignment.ALIGN_NORMAL, 1f, 2f, false);
             }
 
@@ -178,19 +185,19 @@ public class HighlightCover<Identifier> implements Cover<Identifier> {
                 descPaint.setTextSize(Utils.dipToPixels(context, descSize));
                 descPaint.setTypeface(tf);
 
-                descLayout = new StaticLayout( description, descPaint, (int) (canvas.getWidth()-(2*descPadding) ),
+                descLayout = new StaticLayout( description, descPaint, (int) (canvas.getWidth()-(2*descPadding)-(leftPadding+rightPadding) ),
                         Layout.Alignment.ALIGN_NORMAL, 1f, 2f, false);
             }
 
             float titleHeight = hasTitle ? titlePadding*2 + titleLayout.getHeight() : 0;
             float descHeight = hasDescription ? descPadding*2 + descLayout.getHeight() : 0;
-            float top = textPositionOnTop ? 0 : canvas.getHeight()-titleHeight-descHeight;
+            float top = textPositionOnTop ? topPadding : canvas.getHeight()-titleHeight-descHeight-bottomPadding;
 
             if(hasTitle){
                 // save state
                 canvas.save();
 
-                canvas.translate(titlePadding, top+titlePadding);
+                canvas.translate(leftPadding+titlePadding, top+titlePadding);
                 titleLayout.draw(canvas);
 
                 // restore state
@@ -201,7 +208,7 @@ public class HighlightCover<Identifier> implements Cover<Identifier> {
                 // save state
                 canvas.save();
 
-                canvas.translate(descPadding, top+titleHeight+descPadding);
+                canvas.translate(leftPadding+descPadding, top+titleHeight+descPadding);
                 descLayout.draw(canvas);
 
                 // restore state

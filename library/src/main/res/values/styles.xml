@@ -18,6 +18,10 @@
 <resources>
 
     <style name="DefaultHighlightCoverStyle">
+        <item name="csTopPadding">20dip</item>
+        <item name="csBottomPadding">20dip</item>
+        <item name="csLeftPadding">20dip</item>
+        <item name="csRightPadding">20dip</item>
 
         <item name="csTitleColor">#FF333333</item>
         <item name="csTitleSize">22sp</item>

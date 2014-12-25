@@ -17,93 +17,51 @@
 package com.novadart.android.covershow.container.fragment;
 
 import android.app.Activity;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.novadart.android.covershow.container.CovershowAwareContainer;
+import com.novadart.android.covershow.container.CovershowManager;
 import com.novadart.android.covershow.cover.Cover;
-import com.novadart.android.covershow.director.CovershowDirector;
-import com.novadart.android.covershow.director.impl.CovershowDirectorImpl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FragmentCovershowManager<Identifier> implements CovershowDirector.Listener<Identifier> {
+public class FragmentCovershowManager<Identifier> extends CovershowManager<Identifier> {
 
-    private Map<String, CovershowDirector<Identifier>> directors;
-    private Map<String, Boolean> fragmentsVisibility;
+    private boolean hasCovers = false;
+    private boolean isVisible = false;
 
-    private String fragmentInCovershow = null;
-    private FrameLayout coversContainer;
-
-    public void wrapActivityView(Activity activity){
-        directors = new HashMap<>();
-        fragmentsVisibility = new HashMap<>();
-
-        ViewGroup.LayoutParams fullscreenParams =
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        coversContainer = new FrameLayout(activity);
-
-        final ViewGroup rootView = ((ViewGroup) activity.getWindow().getDecorView().getRootView());
-        rootView.post(new Runnable() {
-            @Override
-            public void run() {
-                rootView.addView(coversContainer);
-            }
-        });
+    public FragmentCovershowManager(Activity activity, CovershowAwareContainer<Identifier> covershowAwareContainer) {
+        super(activity, covershowAwareContainer);
     }
 
-    public void registerFragment(Class<?> fragment, CovershowAwareContainer<Identifier> container){
-        CovershowDirector<Identifier> covershowDirector = new CovershowDirectorImpl<>(coversContainer);
-        covershowDirector.addListener(this);
-        covershowDirector.addListener(container);
-        directors.put(fragment.getCanonicalName(), covershowDirector);
+    public void setUserVisibleHint(boolean value){
+        this.isVisible = value;
+
+        tryStart();
     }
 
-    public void setCovers(Class<?> fragment, List<Cover<Identifier>> covers){
-        String canonicalName = fragment.getCanonicalName();
-        CovershowDirector<Identifier> director = directors.get(canonicalName);
-        director.setCovers(covers);
-        tryStart(canonicalName);
+    @Override
+    public void setCovers(List<Cover<Identifier>> covers) {
+        super.setCovers(covers);
+
+        this.hasCovers = true;
+        tryStart();
     }
 
-    public void setFragmentVisibleToUser(Class<?> fragment, boolean isVisibleToUser) {
-        String canonicalName = fragment.getCanonicalName();
-        fragmentsVisibility.put(canonicalName, isVisibleToUser);
-        if(isVisibleToUser) {
-            tryStart(canonicalName);
+    private synchronized void tryStart(){
+        if(isVisible && hasCovers){
+            startCovershow();
         }
     }
 
-    private synchronized void tryStart(String fragmentCanonicalName){
-        CovershowDirector director = directors.get(fragmentCanonicalName);
-        if(director == null){
-            return;
-        }
+    @Override
+    public void onPreCovershow() {}
 
-        boolean hasCovers = director.hasCovers();
-        Boolean isFragmentVisibleToUser = fragmentsVisibility.get(fragmentCanonicalName);
-
-        if(fragmentInCovershow == null && isFragmentVisibleToUser != null && isFragmentVisibleToUser && hasCovers){
-            fragmentInCovershow = fragmentCanonicalName;
-            director.start();
-        }
-    }
-
-    public boolean isCovershowRunning(Class<?> fragment) {
-        return fragmentInCovershow.equals(fragment.getCanonicalName());
-    }
+    @Override
+    public void onNextCover(Identifier identifier) {}
 
 
     @Override
-    public void onCovershowPreparation() {}
+    public void onPostCovershow() {}
 
-    @Override
-    public void onNextCover(Identifier id) {}
 
-    @Override
-    public void onCovershowTermination() {
-        fragmentInCovershow = null;
-    }
 }

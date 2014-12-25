@@ -54,18 +54,12 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
     }
 
     @Override
-    public boolean hasCovers(){
-        return covers != null && !covers.isEmpty();
-    }
-
-
-    @Override
     public void start(){
         for (Listener listener : listeners) {
-            listener.onCovershowPreparation();
+            listener.onPreCovershow();
         }
 
-        getContainer().post(new Runnable() {
+        getContainer().getRootView().post(new Runnable() {
             @Override
             public void run() {
                 displayNextCover();
@@ -98,7 +92,7 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
         getContainer().removeAllViews();
 
         for (Listener listener : listeners) {
-            listener.onCovershowTermination();
+            listener.onPostCovershow();
         }
 
         // free the resources occupied by the previous cover
