@@ -41,6 +41,7 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
     private final ViewGroup container;
     private int coverIndex = -1;
     private List<Cover<Identifier>> covers = new ArrayList<>();
+    private boolean locked = false;
 
     public CovershowDirectorImpl(ViewGroup container) {
         this.container = container;
@@ -68,7 +69,13 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
         displayNextCover();
     }
 
-    protected void displayNextCover(){
+    protected synchronized void displayNextCover(){
+        if(locked){
+            return;
+        }
+
+        locked = true;
+
         if(coverIndex+1 < covers.size()){
 
             swapCovers(
@@ -238,8 +245,26 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
 
             AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
             alphaAnimation.setDuration(fadingTime);
-            alphaAnimation.setAnimationListener(null);
+            alphaAnimation.setAnimationListener(new UnlockDirectorAnimationListener());
             coverView.startAnimation(alphaAnimation);
+        }
+    }
+
+    private class UnlockDirectorAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            locked = false;
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     }
 
@@ -264,7 +289,31 @@ public class CovershowDirectorImpl<Identifier> implements CovershowDirector<Iden
             coverView.animate()
                     .alpha(1f)
                     .setDuration(fadingTime)
-                    .setListener(null);
+                    .setListener(new UnlockDirectorAnimatorListenerAdapter());
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    private class UnlockDirectorAnimatorListenerAdapter implements Animator.AnimatorListener {
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            locked = false;
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
         }
     }
 

@@ -19,7 +19,11 @@ package com.novadart.android.covershow.cover.impl;
 import android.app.Activity;
 import android.view.View;
 
+import com.novadart.android.covershow.cover.Cover;
+
 public class WidgetHighlightCover<Identifier> extends HighlightCover<Identifier> {
+
+    private View widget;
 
     public WidgetHighlightCover(int widgetId, Activity activity) {
         this(widgetId, activity, null);
@@ -35,21 +39,26 @@ public class WidgetHighlightCover<Identifier> extends HighlightCover<Identifier>
 
     public WidgetHighlightCover(final View widget, Activity activity, Identifier id) {
         super(activity, id);
-
-        if(widget != null){
-            widget.post(new Runnable() {
-                @Override
-                public void run() {
-                    int[] winCoordinates = new int[2];
-                    widget.getLocationInWindow(winCoordinates);
-                    setCoordinates(
-                            winCoordinates[0] + (widget.getWidth() / 2),
-                            winCoordinates[1] + (widget.getHeight() / 2)
-                    );
-                }
-            });
-        }
+        this.widget = widget;
     }
 
+    @Override
+    public void buildView(Handler<Identifier> handler) {
+        if(widget != null){
+            int[] winCoordinates = new int[2];
+            widget.getLocationInWindow(winCoordinates);
+            setCoordinates(
+                    winCoordinates[0] + (widget.getWidth() / 2),
+                    winCoordinates[1] + (widget.getHeight() / 2)
+            );
+        }
 
+        super.buildView(handler);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        widget = null;
+    }
 }
