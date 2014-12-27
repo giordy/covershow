@@ -159,13 +159,13 @@ public class HighlightCover<Identifier> implements Cover<Identifier> {
             if(hasTitle) {
                 boolean titleBold = style.getBoolean(R.styleable.HighlightCoverStyle_csTitleBold, true);
                 int titleColor = style.getColor(R.styleable.HighlightCoverStyle_csTitleColor, Color.parseColor("#FF000000"));
-                float titleSize = style.getDimension(R.styleable.HighlightCoverStyle_csTitleSize, Utils.dipToPixels(context, 22f));
+                float titleSize = style.getDimensionPixelSize(R.styleable.HighlightCoverStyle_csTitleSize, (int) Utils.dipToPixels(context, 22f));
 
                 TextPaint titlePaint = new TextPaint();
                 titlePaint.setAntiAlias(true);
                 titlePaint.setColor(titleColor);
                 Typeface tf = Typeface.create(Typeface.SANS_SERIF, titleBold ? Typeface.BOLD : Typeface.NORMAL);
-                titlePaint.setTextSize(Utils.dipToPixels(context, titleSize));
+                titlePaint.setTextSize(titleSize);
                 titlePaint.setTypeface(tf);
 
                 titleLayout = new StaticLayout( title, titlePaint, (int) (canvas.getWidth()-(2*titlePadding)-(leftPadding+rightPadding) ),
@@ -175,14 +175,14 @@ public class HighlightCover<Identifier> implements Cover<Identifier> {
             if(hasDescription) {
                 boolean descBold = style.getBoolean(R.styleable.HighlightCoverStyle_csDescriptionBold, false);
                 int descColor = style.getColor(R.styleable.HighlightCoverStyle_csDescriptionColor, Color.parseColor("#FF000000"));
-                float descSize = style.getDimension(R.styleable.HighlightCoverStyle_csDescriptionSize, Utils.dipToPixels(context, 16f));
+                float descSize = style.getDimensionPixelSize(R.styleable.HighlightCoverStyle_csDescriptionSize, (int) Utils.dipToPixels(context, 16f));
 
 
                 TextPaint descPaint = new TextPaint();
                 descPaint.setAntiAlias(true);
                 descPaint.setColor(descColor);
                 Typeface tf = Typeface.create(Typeface.SANS_SERIF, descBold ? Typeface.BOLD : Typeface.NORMAL);
-                descPaint.setTextSize(Utils.dipToPixels(context, descSize));
+                descPaint.setTextSize(descSize);
                 descPaint.setTypeface(tf);
 
                 descLayout = new StaticLayout( description, descPaint, (int) (canvas.getWidth()-(2*descPadding)-(leftPadding+rightPadding) ),

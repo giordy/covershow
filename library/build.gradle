@@ -16,6 +16,9 @@
 
 apply plugin: 'com.android.library'
 
+project.archivesBaseName='covershow'
+project.version='1.0'
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
@@ -32,13 +35,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-        abortOnError false
-    }
+        lintOptions {
+            abortOnError false
+        }
 
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:21.0.+'
-    compile 'com.android.support:appcompat-v7:21.0.+'
+    compile 'com.android.support:appcompat-v7:21.0.3'
 }
