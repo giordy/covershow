@@ -32,7 +32,7 @@ public abstract class CovershowActivity<Identifier> extends Activity implements 
     private boolean autoStart = true;
 
     @Override
-    public void setCovershowProgrammaticStart() {
+    public void disableAutoStart() {
         this.autoStart = false;
     }
 

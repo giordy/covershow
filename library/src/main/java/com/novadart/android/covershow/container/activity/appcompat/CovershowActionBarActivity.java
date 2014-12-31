@@ -33,7 +33,7 @@ public abstract class CovershowActionBarActivity<Identifier> extends ActionBarAc
     private boolean autoStart = true;
 
     @Override
-    public void setCovershowProgrammaticStart() {
+    public void disableAutoStart() {
         this.autoStart = false;
     }
 

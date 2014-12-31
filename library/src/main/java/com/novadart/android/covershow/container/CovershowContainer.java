@@ -25,7 +25,7 @@ public interface CovershowContainer<Identifier> extends CovershowDirector.Listen
     public static final String ARG_AUTOSTART = "ARG_AUTOSTART";
 
     void startCovershow();
-    void setCovershowProgrammaticStart();
+    void disableAutoStart();
     boolean shouldStartCovershow();
     void onPreCovershow();
     void buildCoverList(AsyncHandler<Identifier> handler);
