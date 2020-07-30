@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2015 Giordano Battilana, Novadart
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <declare-styleable name="HighlightCoverStyle">
+        <attr name="csTopPadding" format="dimension"/>
+        <attr name="csBottomPadding" format="dimension"/>
+        <attr name="csLeftPadding" format="dimension"/>
+        <attr name="csRightPadding" format="dimension"/>
+
+        <attr name="csTitleColor" format="color" />
+        <attr name="csTitleSize" format="dimension" />
+        <attr name="csTitleBold" format="boolean" />
+        <attr name="csTitlePadding" format="dimension" />
+
+        <attr name="csDescriptionColor" format="color" />
+        <attr name="csDescriptionSize" format="dimension" />
+        <attr name="csDescriptionBold" format="boolean" />
+        <attr name="csDescriptionPadding" format="dimension" />
+
+        <attr name="csBackgroundColor" format="color" />
+
+        <attr name="csRingColor" format="color" />
+        <attr name="csRingDiameter" format="dimension" />
+        <attr name="csRingStroke" format="dimension" />
+    </declare-styleable>
+
+</resources>
